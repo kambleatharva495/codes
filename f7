@@ -1,0 +1,63 @@
+dynamic webpage jquery
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Events and Animation</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        #box {
+            width: 300px;
+            height: 150px;
+            background-color: lightblue;
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="hideBtn">Hide Box</button>
+    <button id="showBtn">Show Box</button>
+
+    <div id="box">Hover over me!</div>
+
+    <input type="text" id="name" placeholder="Enter your name">
+    <h3 id="message"></h3>
+
+    <script>
+        $(document).ready(function() {
+
+            $("#hideBtn").click(function() {
+                $("#box").fadeOut(1000);
+            });
+
+            $("#showBtn").click(function() {
+                $("#box").fadeIn(1000);
+            });
+
+            $("#box").hover(function() {
+                $(this).stop().animate({
+                    width: "400px",
+                    height: "200px"
+                }, 500);
+            }, function() {
+                $(this).stop().animate({
+                    width: "300px",
+                    height: "150px"
+                }, 500);
+            });
+
+            $("#name").on("input", function() {
+                $("#message").text("Hello, " + $(this).val());
+            });
+
+        });
+    </script>
+
+</body>
+</html>

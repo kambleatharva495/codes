@@ -1,0 +1,94 @@
+map reduce oprtn (rest api with express)
+// Install: npm install express
+
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+let users = [
+    { id: 1, name: 'Alice', city: 'Pune' },
+    { id: 2, name: 'Bob', city: 'Mumbai' },
+    { id: 3, name: 'Charlie', city: 'Delhi' },
+    { id: 4, name: 'David', city: 'Pune' },
+    { id: 5, name: 'Eve', city: 'Mumbai' },
+    { id: 6, name: 'Frank', city: 'Delhi' }
+];
+
+// GET all users with pagination
+app.get('/api/users', (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 2;
+    const skip = (page - 1) * limit;
+
+    const result = users.slice(skip, skip + limit);
+
+    res.json({
+        page,
+        limit,
+        total: users.length,
+        data: result
+    });
+});
+
+// GET single user
+app.get('/api/users/:id', (req, res) => {
+    const user = users.find(u => u.id === parseInt(req.params.id));
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+});
+
+// POST - create user
+app.post('/api/users', (req, res) => {
+    const newUser = {
+        id: users.length
+            ? Math.max(...users.map(u => u.id)) + 1
+            : 1,
+        name: req.body.name,
+        city: req.body.city
+    };
+
+    users.push(newUser);
+    res.status(201).json(newUser);
+});
+
+// PATCH - update user
+app.patch('/api/users/:id', (req, res) => {
+    const user = users.find(u => u.id === parseInt(req.params.id));
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (req.body.name !== undefined) {
+        user.name = req.body.name;
+    }
+
+    if (req.body.city !== undefined) {
+        user.city = req.body.city;
+    }
+
+    res.json(user);
+});
+
+// DELETE user
+app.delete('/api/users/:id', (req, res) => {
+    const user = users.find(u => u.id === parseInt(req.params.id));
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    users = users.filter(u => u.id !== parseInt(req.params.id));
+
+    res.json({ message: 'User deleted' });
+});
+
+// Start server
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});

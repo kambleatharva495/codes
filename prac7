@@ -1,0 +1,42 @@
+crud oprtn
+// Install: npm install mongodb
+
+const { MongoClient } = require('mongodb');
+const url = 'mongodb://localhost:27017';
+const client = new MongoClient(url);
+
+async function main() {
+    await client.connect();
+    const db = client.db('studentDB');
+    const collection = db.collection('students');
+
+    // CREATE
+    await collection.insertOne({ name: 'John', age: 22, course: 'MCA' });
+    await collection.insertMany([
+        { name: 'Alice', age: 21, course: 'BCA' },
+        { name: 'Bob', age: 23, course: 'MCA' }
+    ]);
+    console.log('Data inserted');
+
+    // READ
+    const allStudents = await collection.find({}).toArray();
+    console.log('All Students:', allStudents);
+
+    const one = await collection.findOne({ name: 'John' });
+    console.log('Find One:', one);
+
+    // UPDATE
+    await collection.updateOne(
+        { name: 'John' },
+        { $set: { age: 24 } }
+    );
+    console.log('Updated');
+
+    // DELETE
+    await collection.deleteOne({ name: 'Bob' });
+    console.log('Deleted');
+
+    await client.close();
+}
+
+main().catch(console.error);   

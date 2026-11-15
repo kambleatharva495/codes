@@ -1,0 +1,45 @@
+data fetching using ajax
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery AJAX Data Fetching</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+    <h2>Fetch User Data</h2>
+
+    <button id="loadUser">Load User</button>
+
+    <div id="result"></div>
+
+    <script>
+        $("#loadUser").click(function() {
+            $("#result").html("<p>Loading...</p>");
+
+            $.ajax({
+                url: "https://randomuser.me/api/",
+                method: "GET",
+                dataType: "json",
+
+                success: function(data) {
+                    const user = data.results[0];
+
+                    $("#result").html(
+                        "<h3>" + user.name.first + " " + user.name.last + "</h3>" +
+                        "<p>Email: " + user.email + "</p>" +
+                        "<p>Country: " + user.location.country + "</p>"
+                    );
+                },
+
+                error: function() {
+                    $("#result").html("<p>Unable to fetch data.</p>");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

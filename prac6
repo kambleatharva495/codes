@@ -1,0 +1,51 @@
+updataion,deletion of records 
+CREATE DATABASE atharva;
+USE atharva;
+CREATE TABLE Library1 (
+    Book_ID INT PRIMARY KEY,
+    Book_Name VARCHAR(100),
+    Author VARCHAR(100),
+    Price DECIMAL(10, 2)
+);
+
+INSERT INTO Library1 VALUES
+(101, 'Database System Concepts', 'Korth', 650.00),
+(102, 'Operating System Concepts', 'Silberschatz', 700.00),
+(103, 'Computer Networks', 'Tanenbaum', 550.00),
+(104, 'Data Structures', 'Seymour Lipschutz', 450.00);
+
+SELECT * FROM Library1;
+
+CREATE TABLE Library_Auditt1 (
+    Audit_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Book_ID INT,
+    Book_Name VARCHAR(100),
+    Author VARCHAR(100),
+    Price DECIMAL(10, 2),
+    Action_Type VARCHAR(20),
+    Action_Date DATETIME
+);
+
+SELECT * FROM Library_Auditt1;
+
+DELIMITER //
+
+CREATE TRIGGER before_library_update
+BEFORE UPDATE ON Library1
+FOR EACH ROW
+BEGIN
+    INSERT INTO Library_Auditt1
+    (Book_ID, Book_Name, Author, Price, Action_Type, Action_Date)
+    VALUES
+    (OLD.Book_ID, OLD.Book_Name, OLD.Author, OLD.Price, 'UPDATE', NOW());
+END //
+
+DELIMITER ;
+
+UPDATE Library1
+SET Price = 750.00
+WHERE Book_ID = 101;
+
+SELECT * FROM Library1;
+
+SELECT * FROM Library_Auditt1;

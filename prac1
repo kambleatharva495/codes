@@ -1,0 +1,43 @@
+ddl statements
+CREATE DATABASE atharva;
+USE atharva;
+
+CREATE TABLE Student (
+    ID INT PRIMARY KEY,
+    Name VARCHAR(30),
+    Branch VARCHAR(30),
+    Marks INT
+);
+
+INSERT INTO Student VALUES 
+    (101, 'Aarav', 'IT', 85), 
+	(102, 'ganu', 'cs', 95);
+    select * FROM student;
+    ALTER TABLE Student ADD Email VARCHAR(50);
+
+ALTER TABLE Student MODIFY Name VARCHAR(50);
+
+ALTER TABLE Student DROP COLUMN Email;
+
+CREATE VIEW Student_View AS SELECT ID, Name, Marks FROM Student;
+
+SELECT * FROM Student_View;
+CREATE INDEX idx_name ON Student(Name);
+DROP VIEW Student_View;
+
+DROP INDEX idx_name ON Student;
+
+RENAME TABLE Student TO Student_Details;
+
+TRUNCATE TABLE Student_Details;
+
+DROP TABLE Student_Details;
+
+CREATE TABLE Courses (  
+Course_ID INT AUTO_INCREMENT PRIMARY KEY,
+ Course_Name VARCHAR(30)
+);
+INSERT INTO Courses (Course_Name) VALUES ('Python'), ('Cloud Computing');
+
+SELECT * FROM Courses;
+   

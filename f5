@@ -1,0 +1,56 @@
+string validatn
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Validation and Type Conversion</title>
+</head>
+<body>
+
+    <form id="studentForm">
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="age" placeholder="Age">
+        <input type="text" id="email" placeholder="Email">
+        <button type="submit">Process</button>
+    </form>
+
+    <p id="result"></p>
+
+    <script>
+        document.getElementById("studentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let name = document.getElementById("name").value.trim();
+            let age = document.getElementById("age").value.trim();
+            let email = document.getElementById("email").value.trim();
+
+            if (name === "") {
+                alert("Name cannot be empty.");
+                return;
+            }
+
+            if (!email.includes("@")) {
+                alert("Invalid email address.");
+                return;
+            }
+
+            let numericAge = Number(age);
+
+            if (age === "" || isNaN(numericAge)) {
+                alert("Age must be a number.");
+                return;
+            }
+
+            let formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+            let domain = email.substring(email.indexOf("@") + 1);
+
+            document.getElementById("result").innerHTML =
+                "Formatted Name: " + formattedName +
+                "<br>Age: " + numericAge +
+                "<br>Email Domain: " + domain;
+        });
+    </script>
+
+</body>
+</html>

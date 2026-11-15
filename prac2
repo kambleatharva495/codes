@@ -1,0 +1,123 @@
+dml conmd ,queri
+CREATE DATABASE atharva;
+USE atharva;
+CREATE TABLE Student (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(30),
+    age INT,
+    branch VARCHAR(20),
+    marks INT
+);
+
+CREATE TABLE Course (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(30),
+    student_id INT
+);
+
+INSERT INTO Student VALUES
+(1, 'Aarav', 20, 'Computer', 85),
+(2, 'Isha', 19, 'IT', 78),
+(3, 'Rohan', 21, 'Mechanical', 68),
+(4, 'Meera', 20, 'Computer', 92),
+(5, 'Kabir', 22, 'Civil', 74);
+
+INSERT INTO Course VALUES
+(101, 'DBMS', 1),
+(102, 'Python', 2),
+(103, 'Java', 4),
+(104, 'Networking', 6);
+
+SELECT * FROM Student;CREATE TABLE Student (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(30),
+    age INT,
+    branch VARCHAR(20),
+    marks INT
+);
+
+CREATE TABLE Course (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(30),
+    student_id INT
+);
+
+INSERT INTO Student VALUES
+(1, 'Aarav', 20, 'Computer', 85),
+(2, 'Isha', 19, 'IT', 78),
+(3, 'Rohan', 21, 'Mechanical', 68),
+(4, 'Meera', 20, 'Computer', 92),
+(5, 'Kabir', 22, 'Civil', 74);
+
+INSERT INTO Course VALUES
+(101, 'DBMS', 1),
+(102, 'Python', 2),
+(103, 'Java', 4),
+(104, 'Networking', 6);
+
+SELECT * FROM Student;
+
+SELECT name, marks  
+FROM Student 
+WHERE marks > 75;
+
+SELECT * FROM Student
+WHERE age >= 20 AND marks > 70;
+
+SELECT DISTINCT branch FROM Student;
+
+
+SELECT
+    COUNT(*) AS Total_Students,
+    AVG(marks) AS Average_Marks,
+    MAX(marks) AS Highest_Marks,
+    MIN(marks) AS Lowest_Marks
+FROM Student;
+UPDATE Student
+
+SET marks = 88
+WHERE student_id = 1;
+
+
+DELETE FROM Student
+WHERE student_id = 3;
+
+
+SELECT Student.name, Course.course_name
+FROM Student 
+INNER JOIN Course 
+ON Student.student_id = Course.student_id;
+
+
+SELECT Student.name, Course.course_name
+FROM Student
+LEFT JOIN Course
+ON Student.student_id = Course.student_id;
+
+
+SELECT Student.name, Course.course_name
+FROM Student
+RIGHT JOIN Course
+ON Student.student_id = Course.student_id;
+
+
+SELECT name, marks
+FROM Student
+WHERE marks > (SELECT AVG(marks) FROM Student);
+
+
+SELECT name FROM Student
+WHERE branch = 'Computer'
+UNION
+SELECT name FROM Student
+WHERE branch = 'IT';
+
+
+CREATE VIEW StudentView AS
+SELECT student_id, name, branch, marks 
+FROM Student;
+
+
+SELECT * FROM StudentView;
+
+DROP VIEW StudentView;

@@ -1,0 +1,42 @@
+dom mani using java
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript DOM Example</title>
+</head>
+<body>
+
+    <h1 id="heading">JavaScript DOM Example</h1>
+
+    <div id="content">This content can be hidden or displayed.</div>
+
+    <button onclick="hideContent()">Hide</button>
+    <button onclick="showContent()">Show</button>
+    <button onclick="changeText()">Change Text</button>
+    <button onclick="changeStyle()">Change Style</button>
+
+    <script>
+        function hideContent() {
+            document.getElementById("content").style.display = "none";
+        }
+
+        function showContent() {
+            document.getElementById("content").style.display = "block";
+        }
+
+        function changeText() {
+            document.getElementById("heading").textContent = "Text Changed Successfully!";
+        }
+
+        function changeStyle() {
+            const content = document.getElementById("content");
+            content.style.backgroundColor = "lightgreen";
+            content.style.color = "darkgreen";
+            content.style.fontSize = "22px";
+        }
+    </script>
+
+</body>
+</html>

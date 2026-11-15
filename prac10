@@ -1,0 +1,107 @@
+mongodb databs conectvt by php databs nvgn oprtn (emply mangmnt in mongodb add,edt,view,dlt)
+// Install: npm install mongodb
+
+const { MongoClient } = require('mongodb');
+
+// --- DATABASE CONNECTIVITY ---
+const url = 'mongodb://localhost:27017';
+const client = new MongoClient(url);
+const db = client.db('companyDB');
+const collection = db.collection('employee');
+
+const readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+const ask = (question) => new Promise(resolve => readline.question(question, resolve));
+
+// --- ADD Operation ---
+async function addEmployee() {
+    const name = await ask('Enter name: ');
+    const age = parseInt(await ask('Enter age: '));
+    const department = await ask('Enter department: ');
+    const salary = parseFloat(await ask('Enter salary: '));
+
+    const result = await collection.insertOne({ name, age, department, salary });
+    console.log(`Employee added with ID: ${result.insertedId}`);
+}
+
+// --- EDIT (Update) Operation ---
+async function editEmployee() {
+    const name = await ask('Enter employee name to edit: ');
+    const newSalary = parseFloat(await ask('Enter new salary: '));
+
+    const result = await collection.updateOne(
+        { name: name }, // filter
+        { $set: { salary: newSalary } } // update
+    );
+
+    if (result.matchedCount > 0) {
+        console.log(`Employee '${name}' updated successfully.`);
+    } else {
+        console.log(`Employee '${name}' not found.`);
+    }
+}
+
+// --- DELETE Operation ---
+async function deleteEmployee() {
+    const name = await ask('Enter employee name to delete: ');
+    const result = await collection.deleteOne({ name: name });
+
+    if (result.deletedCount > 0) {
+        console.log(`Employee '${name}' deleted successfully.`);
+    } else {
+        console.log(`Employee '${name}' not found.`);
+    }
+}
+
+// --- VIEW (Navigation) Operation ---
+async function viewEmployees() {
+    console.log('\n--- All Employees ---');
+    const employees = await collection.find({}).toArray();
+
+    if (employees.length === 0) {
+        console.log('No employees found.');
+    } else {
+        employees.forEach(emp => {
+            console.log(`Name: ${emp.name}, Age: ${emp.age}, Dept: ${emp.department}, Salary: ${emp.salary}`);
+        });
+    }
+    console.log('\n');
+}
+
+// --- MAIN MENU ---
+async function main() {
+    await client.connect();
+    console.log('Connected to MongoDB!\n');
+
+    while (true) {
+        console.log('1. Add Employee');
+        console.log('2. Edit Employee');
+        console.log('3. Delete Employee');
+        console.log('4. View All Employees');
+        console.log('5. Exit');
+
+        const choice = await ask('Enter your choice (1-5): ');
+
+        if (choice === '1') {
+            await addEmployee();
+        } else if (choice === '2') {
+            await editEmployee();
+        } else if (choice === '3') {
+            await deleteEmployee();
+        } else if (choice === '4') {
+            await viewEmployees();
+        } else if (choice === '5') {
+            await client.close();
+            console.log('Connection closed. Exiting...');
+            readline.close();
+            break;
+        } else {
+            console.log('Invalid choice! Try again.');
+        }
+    }
+}
+
+main().catch(console.error); 

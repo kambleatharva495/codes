@@ -1,0 +1,76 @@
+execption handling 
+CREATE DATABASE atharva;
+USE atharva;
+CREATE TABLE Borrower ( 
+Roll_no INT PRIMARY KEY, 
+Name VARCHAR(50), 
+Date_of_Issue DATE, 
+Name_of_Book VARCHAR(100), 
+Status CHAR(1)
+) ;
+
+CREATE TABLE Fine (  
+Roll_No INT, 
+Fine_Date DATE, 
+Amt DECIMAL(10,2), 
+FOREIGN KEY (Roll_No) REFERENCES Borrower(Roll_No)
+) ;
+
+INSERT INTO Borrower VALUES 
+(301, 'Aarav', '2026-09-10', 'Java Programming', 'I'), 
+(302, 'Kavya', '2026-09-25', 'Web Development', 'I'), 
+(303, 'Omkar', '2026-10-05', 'Data Structures', 'I');
+
+DELIMITER $$
+
+CREATE PROCEDURE BookReturn(
+IN rno INT, 
+IN book VARCHAR(100)
+) 
+
+BEGIN
+ DECLARE issue_date DATE;
+DECLARE days_taken INT; 
+DECLARE fine_amount DECIMAL(10,2);
+
+SELECT Date_of_Issue INTO issue_date 
+FROM Borrower 
+WHERE Roll_No = rno
+AND Name_of_Book = book 
+AND Status = 'I';
+
+SET days_taken = DATEDIFF(CURDATE(), issue_date);
+
+IF days_taken < 15 THEN
+ SET fine_amount = 0; 
+ELSEIF days_taken <= 30 THEN
+ SET fine_amount=days_taken * 5; 
+ELSE
+ SET fine_amount = days_taken * 50;
+
+END IF;
+
+UPDATE Borrower
+SET Status = 'R'
+WHERE Roll_No = rno
+ AND Name_of_Book = book
+ AND Status = '1';
+
+IF fine_amount > 0 THEN
+INSERT INTO Fine VALUES (rno, CURDATE(), fine_amount);
+ END IF;
+
+SELECT rno AS Roll_No,
+book AS Book_Name, 
+days_taken AS Days_Borrowed, 
+fine_amount AS Fine_Amount;
+END $$ 
+DELIMITER ;
+
+CALL BookReturn (301, 'Java Programming');
+
+
+SELECT*FROM Borrower;
+
+
+SELECT*FROM Fine;

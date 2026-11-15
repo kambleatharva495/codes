@@ -1,0 +1,81 @@
+aggregtn,indexing in mongodb
+// Install: npm install mongoose
+
+const mongoose = require('mongoose');
+
+const saleSchema = new mongoose.Schema({
+    product: String,
+    category: String,
+    price: Number,
+    quantity: Number,
+    city: String
+});
+
+const Sale = mongoose.model('Sale', saleSchema);
+
+async function run() {
+    try {
+        // Connect to MongoDB
+        await mongoose.connect('mongodb://localhost:27017/salesdb');
+
+        // INSERT DATA
+        await Sale.insertMany([
+            { product: 'Laptop', category: 'Electronics', price: 50000, quantity: 2, city: 'Pune' },
+            { product: 'Mobile', category: 'Electronics', price: 20000, quantity: 5, city: 'Mumbai' },
+            { product: 'TV', category: 'Electronics', price: 30000, quantity: 1, city: 'Pune' },
+            { product: 'Chair', category: 'Furniture', price: 5000, quantity: 4, city: 'Nashik' },
+            { product: 'Table', category: 'Furniture', price: 8000, quantity: 3, city: 'Mumbai' }
+        ]);
+
+        // 1. MATCH & GROUP
+        const result1 = await Sale.aggregate([
+            { $match: { category: 'Electronics' } },
+            {
+                $group: {
+                    _id: '$category',
+                    totalRevenue: {
+                        $sum: { $multiply: ['$price', '$quantity'] }
+                    },
+                    avgPrice: { $avg: '$price' },
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+        console.log('Grouped Result:', result1);
+
+        // 2. SORT
+        const result2 = await Sale.aggregate([
+            {
+                $group: {
+                    _id: '$category',
+                    totalRevenue: {
+                        $sum: { $multiply: ['$price', '$quantity'] }
+                    }
+                }
+            },
+            { $sort: { totalRevenue: -1 } }
+        ]);
+        console.log('Sorted Result:', result2);
+
+        // 3. PROJECT
+        const projected = await Sale.aggregate([
+            { $project: { product: 1, price: 1, _id: 0 } }
+        ]);
+        console.log('Projected:', projected);
+
+        // 4. SORT, SKIP & LIMIT
+        const paged = await Sale.aggregate([
+            { $sort: { price: 1 } },
+            { $skip: 1 },
+            { $limit: 2 }
+        ]);
+        console.log('Skip & Limit:', paged);
+
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await mongoose.disconnect();
+    }
+}
+
+run();

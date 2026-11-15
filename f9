@@ -1,0 +1,46 @@
+php array strng oprn
+<?php
+$numbers = [50, 20, 80, 10, 40];
+
+sort($numbers);
+echo "Ascending: ";
+print_r($numbers);
+echo "<br>";
+
+rsort($numbers);
+echo "Descending: ";
+print_r($numbers);
+echo "<br>";
+
+$students = ["Rahul", "Priya", "Amit", "Sneha"];
+
+echo in_array("Priya", $students)
+    ? "Priya found.<br>"
+    : "Priya not found.<br>";
+
+$array1 = ["HTML", "CSS"];
+$array2 = ["JavaScript", "PHP"];
+
+echo "Merged Array: ";
+print_r(array_merge($array1, $array2));
+echo "<br>";
+
+$name = "Rahul Sharma";
+
+echo preg_match("/^[a-zA-Z ]+$/", $name)
+    ? "Valid name.<br>"
+    : "Invalid name.<br>";
+
+$email = "student@example.com";
+
+echo filter_var($email, FILTER_VALIDATE_EMAIL)
+    ? "Valid email.<br>"
+    : "Invalid email.<br>";
+
+$domain = substr(strrchr($email, "@"), 1);
+echo "Domain: " . $domain . "<br>";
+
+$fullName = "  rahul sharma  ";
+
+echo "Formatted: " . ucwords(strtolower(trim($fullName)));
+?>
